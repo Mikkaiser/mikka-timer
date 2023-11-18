@@ -1,56 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { AsyncStorageService } from './src/services/AsyncStorage.service';
-import { ClockInOutInterface } from './src/interfaces/ClockInOut';
-// import { useFonts, Poppins_900Black } from "@expo-google-fonts/poppins";
-// import { AppLoading } from './src/components/AppLoading/AppLoading';
-
+import { useFonts } from "expo-font";
+import { AppLoading } from "./src/screens/Home/components/AppLoading";
+import Dashboard from "./src/screens/Home/components/ClockInOut";
 
 export default function App() {
 
-  let asyncStorageService = new AsyncStorageService();
+  let [fontsLoaded] = useFonts({
+    'Poppins_Bold': require("./assets/fonts/Poppins/Poppins-Bold.ttf"),
+    'Poppins_Medium': require("./assets/fonts/Poppins/Poppins-Medium.ttf"),
+  });
 
-  const handleClockIn = () => {
-    const currentDate = new Date();
-
-    const clockInOut : ClockInOutInterface = {
-      id: 1,
-      dateTimeIn: currentDate,
-    }
-    asyncStorageService.saveClockInOnStorage(clockInOut);
+  if (!fontsLoaded) {
+    return <AppLoading />;
   }
-
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <TouchableOpacity style={styles.centralButton} onPress={handleClockIn}>
-        <Text style={styles.buttonText}>Clock-In</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  return <Dashboard />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  centralButton: {
-    backgroundColor: "#1c58d8",
-    color: "#fff",
-    width: 200,
-    height: 200,
-    padding: 10,
-    borderRadius: 100,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 30,
-    fontWeight: "bold",
-  }
-});
