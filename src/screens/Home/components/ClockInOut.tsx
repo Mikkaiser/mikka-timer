@@ -3,19 +3,19 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ClockInOutInterface } from "../../../interfaces/ClockInOut";
 import { AsyncStorageService } from "../../../services/AsyncStorage.service";
 import ProjectColors from "../../../utils/Constants";
+import { useState } from "react";
 
 export default function Dashboard() {
+
+  const [clocks, setClocks] = useState<ClockInOutInterface[]>([]);
+  
   let asyncStorageService = new AsyncStorageService();
 
-  const handleClockIn = () => {
-    const currentDate = new Date();
+  const handleClockIn = async () => {
+    if(clocks.length === 0) {
 
-    const clockInOut: ClockInOutInterface = {
-      id: 1,
-      dateTimeIn: currentDate,
-    };
-    asyncStorageService.saveClockInOnStorage(clockInOut);
-  };
+    } 
+  }
 
   return (
     <View style={styles.container}>
