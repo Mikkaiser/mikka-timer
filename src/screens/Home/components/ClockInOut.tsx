@@ -4,17 +4,32 @@ import { ClockInOutInterface } from "../../../interfaces/ClockInOut";
 import { AsyncStorageService } from "../../../services/AsyncStorage.service";
 import ProjectColors from "../../../utils/Constants";
 import { useState } from "react";
+import { ClockInOutService } from "../../../services/ClockInOut.service";
 
 export default function Dashboard() {
 
   const [clocks, setClocks] = useState<ClockInOutInterface[]>([]);
   
-  let asyncStorageService = new AsyncStorageService();
+  let clockInOutService = new ClockInOutService();
 
   const handleClockIn = async () => {
-    if(clocks.length === 0) {
+    const registerToday = await clockInOutService.getRegisterFromToday();
+    const storedValues = await clockInOutService.getAll();
 
-    } 
+    let clockInOutObject: ClockInOutInterface;
+
+    if(registerToday) {
+      clockInOutObject = {
+        ...registerToday,
+        dateTimeOut: new Date(),
+      };
+    }
+    else {
+      clockInOutObject = {
+        id: storedValues?.length ? storedValues.length + 1 : 1,
+        dateTimeIn: new Date(),
+      };
+    }
   }
 
   return (
