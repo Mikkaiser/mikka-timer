@@ -1,20 +1,52 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ClockInOutInterface } from "../../../interfaces/ClockInOut";
-import { AsyncStorageService } from "../../../services/AsyncStorage.service";
 import ProjectColors from "../../../utils/Constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClockInOutService } from "../../../services/ClockInOut.service";
+import { format } from "date-fns";
 
 export default function Dashboard() {
 
   const [clocks, setClocks] = useState<ClockInOutInterface[]>([]);
+  const [clockInToday, setClockInToday] = useState<Date>(
+    new Date()
+  );
+  const [clockOutToday, setClockOutToday] = useState<Date>(
+    new Date()
+  );
   
   let clockInOutService = new ClockInOutService();
+
+  useEffect(() => {
+    async function getClocks() {
+      const storedValues = await clockInOutService.getAll();
+      setClocks(storedValues);
+    }
+
+    getClocks();
+  }, [])
+
+  useEffect(() => {
+
+    async function getRegisterToday() {
+      const registerToday = await clockInOutService.getRegisterFromToday();
+      if (registerToday) {
+        console.log(registerToday);
+        setClockInToday(registerToday.dateTimeIn!);
+
+        const clockOutTodayIsValid = !isNaN(registerToday.dateTimeOut!.valueOf() as number);
+        if (clockOutTodayIsValid) setClockOutToday(registerToday.dateTimeOut!);
+      }
+    }
+
+    getRegisterToday();
+  }, [clocks]);
 
   const handleClockIn = async () => {
     const registerToday = await clockInOutService.getRegisterFromToday();
     const storedValues = await clockInOutService.getAll();
+    let updatedValues: ClockInOutInterface[] = [];
 
     let clockInOutObject: ClockInOutInterface;
 
@@ -23,13 +55,27 @@ export default function Dashboard() {
         ...registerToday,
         dateTimeOut: new Date(),
       };
+
+      await clockInOutService.update(
+        clockInOutObject
+      );
+
+      updatedValues = await clockInOutService.getAll();
     }
     else {
       clockInOutObject = {
         id: storedValues?.length ? storedValues.length + 1 : 1,
         dateTimeIn: new Date(),
       };
+
+      await clockInOutService.saveNew(
+        clockInOutObject
+      );
+
+      updatedValues = await clockInOutService.getAll();
     }
+    
+    setClocks(updatedValues);
   }
 
   return (
@@ -45,11 +91,19 @@ export default function Dashboard() {
           <View style={styles.upviewInfoHourInOutView}>
             <View style={styles.clockInInfoView}>
               <Text style={styles.dailyDetailsClock}>Clock In</Text>
-              <Text style={styles.clockInOutDetails}>08:00 am</Text>
+              <Text style={styles.clockInOutDetails}>
+                {!isNaN(clockOutToday?.valueOf() as number)
+                  ? format(clockInToday!, "HH:mm a")
+                  : "--"}
+              </Text>
             </View>
             <View style={styles.clockOutInfoView}>
               <Text style={styles.dailyDetailsClock}>Clock Out</Text>
-              <Text style={styles.clockInOutDetails}>5:00 pm</Text>
+              <Text style={styles.clockInOutDetails}>
+                {!isNaN(clockOutToday?.valueOf() as number)
+                  ? format(clockOutToday!, "HH:mm a")
+                  : "--"}
+              </Text>
             </View>
           </View>
         </View>
