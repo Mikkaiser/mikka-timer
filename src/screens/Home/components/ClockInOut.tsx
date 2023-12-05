@@ -9,12 +9,9 @@ import { format } from "date-fns";
 export default function Dashboard() {
 
   const [clocks, setClocks] = useState<ClockInOutInterface[]>([]);
-  const [clockInToday, setClockInToday] = useState<Date>(
-    new Date()
-  );
-  const [clockOutToday, setClockOutToday] = useState<Date>(
-    new Date()
-  );
+  const [clockInToday, setClockInToday] = useState<Date>();
+  const [clockOutToday, setClockOutToday] = useState<Date>();
+  const [totalExtraHours, setTotalExtraHours] = useState<number>(0);
   
   let clockInOutService = new ClockInOutService();
 
@@ -22,9 +19,17 @@ export default function Dashboard() {
     async function getClocks() {
       const storedValues = await clockInOutService.getAll();
       setClocks(storedValues);
+      // await clockInOutService.deleteAll();
     }
 
+    async function getTotalExtraHours() {
+      const totalExtraHours = await clockInOutService.getTotalExtraHours();
+      setTotalExtraHours(totalExtraHours);
+    }
+
+
     getClocks();
+    getTotalExtraHours();
   }, [])
 
   useEffect(() => {
@@ -32,7 +37,6 @@ export default function Dashboard() {
     async function getRegisterToday() {
       const registerToday = await clockInOutService.getRegisterFromToday();
       if (registerToday) {
-        console.log(registerToday);
         setClockInToday(registerToday.dateTimeIn!);
 
         const clockOutTodayIsValid = !isNaN(registerToday.dateTimeOut!.valueOf() as number);
@@ -85,14 +89,18 @@ export default function Dashboard() {
         <View style={styles.upviewInfo}>
           <View style={styles.upviewInfoHourView}>
             <Text style={styles.upviewInfoTitle}>Total hours balance</Text>
-            <Text style={styles.upviewInfoHourBalance}>3 hours - Credit</Text>
+            <Text style={styles.upviewInfoHourBalance}>
+              {totalExtraHours > 1
+                ? `Credit: ${totalExtraHours} hours`
+                : `Credit: ${totalExtraHours} hour`}
+            </Text>
           </View>
           <Text style={styles.todayTitle}>Today</Text>
           <View style={styles.upviewInfoHourInOutView}>
             <View style={styles.clockInInfoView}>
               <Text style={styles.dailyDetailsClock}>Clock In</Text>
               <Text style={styles.clockInOutDetails}>
-                {!isNaN(clockOutToday?.valueOf() as number)
+                {!isNaN(clockInToday?.valueOf() as number)
                   ? format(clockInToday!, "HH:mm a")
                   : "--"}
               </Text>

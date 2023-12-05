@@ -1,5 +1,6 @@
 import { AsyncStorageService } from "./AsyncStorage.service";
 import { ClockInOutInterface } from "../interfaces/ClockInOut";
+import differenceInHours from "date-fns/differenceInHours";
 
 export class ClockInOutService {
   asyncStorageService = new AsyncStorageService();
@@ -58,5 +59,25 @@ export class ClockInOutService {
       );
       return registerToday;
     }
+  }
+
+  async getTotalExtraHours(): Promise<number> {
+    const storedValues = await this.getAll();
+    let totalExtraHours = 0;
+
+    if (storedValues) {
+      storedValues.map((item: ClockInOutInterface) => {
+        if(item.dateTimeOut && item.dateTimeIn) {
+          const difference = differenceInHours(
+            item.dateTimeIn,
+            item.dateTimeOut
+          );
+          totalExtraHours += difference;
+          console.log(difference);
+        }
+      });
+    }
+
+    return totalExtraHours;
   }
 }
