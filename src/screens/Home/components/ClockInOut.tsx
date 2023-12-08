@@ -19,7 +19,6 @@ export default function Dashboard() {
     async function getClocks() {
       const storedValues = await clockInOutService.getAll();
       setClocks(storedValues);
-      // await clockInOutService.deleteAll();
     }
 
     async function getTotalExtraHours() {
@@ -209,7 +208,7 @@ const styles = StyleSheet.create({
   },
   dailyDetailsClock: {
     color: "white",
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: "Poppins_Medium",
     opacity: 0.75,
   },
@@ -217,7 +216,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "Poppins_Medium",
     opacity: 0.75,
-    fontSize: 13,
+    fontSize: 14,
     textAlign: "center",
     marginTop: "10%",
   },
