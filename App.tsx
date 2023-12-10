@@ -6,6 +6,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, View, Image, Text } from "react-native";
 import ProjectColors from "./src/utils/Constants";
+import { StatusBar } from "expo-status-bar";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -22,89 +24,90 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          tabBarShowLabel: false,
-          tabBarStyle: {
-            position: "absolute",
-            bottom: 25,
-            left: 20,
-            right: 20,
-            backgroundColor: "#FAFAFA",
-            borderRadius: 15,
-            height: 70,
-            ...styles.shadow,
-          },
-        }}
-      >
-        <Tab.Screen
-          name="Home"
-          component={Dashboard}
-          options={{
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <Image
-                  source={require("./assets/home.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused
-                      ? ProjectColors.primary
-                      : ProjectColors.neutral,
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused
-                      ? ProjectColors.primary
-                      : ProjectColors.neutral,
-                    fontFamily: "Poppins_Bold",
-                    fontSize: 12,
-                  }}
-                >
-                  HOME
-                </Text>
-              </View>
-            ),
+        <StatusBar style="auto" />
+        <Tab.Navigator
+          screenOptions={{
+            tabBarShowLabel: false,
+            tabBarStyle: {
+              position: "absolute",
+              bottom: 25,
+              left: 20,
+              right: 20,
+              backgroundColor: "#FAFAFA",
+              borderRadius: 15,
+              height: 70,
+              ...styles.shadow,
+            },
           }}
-        />
-        <Tab.Screen
-          name="History"
-          component={History}
-          options={{
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <Image
-                  source={require("./assets/history.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: 25,
-                    height: 25,
-                    tintColor: focused
+          >
+          <Tab.Screen
+            name="Home"
+            component={Dashboard}
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ focused }) => (
+                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                  <Image
+                    source={require("./assets/home.png")}
+                    resizeMode="contain"
+                    style={{
+                      width: 25,
+                      height: 25,
+                      tintColor: focused
                       ? ProjectColors.primary
                       : ProjectColors.neutral,
-                  }}
-                />
-                <Text
-                  style={{
-                    color: focused
+                    }}
+                    />
+                  <Text
+                    style={{
+                      color: focused
                       ? ProjectColors.primary
                       : ProjectColors.neutral,
-                    fontFamily: "Poppins_Bold",
-                    fontSize: 12,
-                  }}
-                >
-                  HISTORY
-                </Text>
-              </View>
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+                      fontFamily: "Poppins_Bold",
+                      fontSize: 12,
+                    }}
+                    >
+                    HOME
+                  </Text>
+                </View>
+              ),
+            }}
+            />
+          <Tab.Screen
+            name="History"
+            component={History}
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ focused }) => (
+                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                  <Image
+                    source={require("./assets/history.png")}
+                    resizeMode="contain"
+                    style={{
+                      width: 25,
+                      height: 25,
+                      tintColor: focused
+                      ? ProjectColors.primary
+                      : ProjectColors.neutral,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: focused
+                      ? ProjectColors.primary
+                      : ProjectColors.neutral,
+                      fontFamily: "Poppins_Bold",
+                      fontSize: 12,
+                    }}
+                    >
+                    HISTORY
+                  </Text>
+                </View>
+              ),
+            }}
+            />
+        </Tab.Navigator>
+      </NavigationContainer>
   );
 }
 

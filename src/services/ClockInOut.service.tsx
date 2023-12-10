@@ -73,7 +73,6 @@ export class ClockInOutService {
             item.dateTimeOut
           );
           totalExtraHours += difference;
-          console.log(difference);
         }
       });
     }

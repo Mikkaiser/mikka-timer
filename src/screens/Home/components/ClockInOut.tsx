@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ClockInOutInterface } from "../../../interfaces/ClockInOut";
 import ProjectColors from "../../../utils/Constants";
@@ -83,7 +82,6 @@ export default function Dashboard() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
       <View style={styles.upView}>
         <View style={styles.upviewInfo}>
           <View style={styles.upviewInfoHourView}>
